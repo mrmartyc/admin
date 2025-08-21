@@ -1,0 +1,128 @@
+
+  /* Reset a základní nastavení */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f9fc;
+    color: #333;
+  }
+
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+  }
+
+  /* Login box */
+  #loginBox, #adminBox {
+    max-width: 500px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  /* Form */
+  form input[type="email"],
+  form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+
+  form input[type="email"]:focus,
+  form input[type="password"]:focus {
+    border-color: #2980b9;
+    outline: none;
+  }
+
+  form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #2980b9;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  form button:hover {
+    background-color: #3498db;
+  }
+
+  /* Admin dashboard */
+  #adminBox button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 15px;
+  }
+
+  #adminBox button:hover {
+    background-color: #c0392b;
+  }
+
+  /* Tabulka */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+  }
+
+  thead th {
+    background-color: #2980b9;
+    color: white;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  tbody button {
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  tbody button:hover {
+    background-color: #d35400;
+  }
+
+  @media (max-width: 600px) {
+    #loginBox, #adminBox {
+      margin: 20px;
+      padding: 20px;
+    }
+
+    table, th, td {
+      font-size: 14px;
+    }
+
+    form button, #adminBox button, tbody button {
+      padding: 10px;
+    }
+  }
+

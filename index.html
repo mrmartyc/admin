@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Žádosti o slevu</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Login -->
+  <div id="loginBox">
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required><br><br>
+      <input type="password" id="password" placeholder="Heslo" required><br><br>
+      <button type="submit">Přihlásit</button>
+    </form>
+  </div>
+
+  <!-- Admin dashboard -->
+  <div id="adminBox" style="display:none;">
+    <h2>Žádosti o slevu</h2>
+    <button onclick="logout()">Odhlásit</button>
+    <br><br>
+    <table>
+      <thead>
+        <tr>
+          <th>Jméno a Příjmení</th>
+          <th>Instagram</th>
+          <th>Čas</th>
+          <th>Akce</th>
+        </tr>
+      </thead>
+      <tbody id="data"></tbody>
+    </table>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyApC1GlxCF45If5mxUTKXTYhFKJtSG9eFk",
+      authDomain: "parties-fever.firebaseapp.com",
+      projectId: "parties-fever",
+      storageBucket: "parties-fever.firebasestorage.app",
+      messagingSenderId: "993690906404",
+      appId: "1:993690906404:web:33fcf92f2651266c1a0db1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    async function loadData() {
+      const snapshot = await getDocs(collection(db, "zadosti"));
+      const tbody = document.getElementById("data");
+      tbody.innerHTML = "";
+
+      snapshot.forEach(d => {
+        const data = d.data();
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${data.jmeno}</td>
+          <td>${data.instagram}</td>
+          <td>${data.cas?.toDate?.().toLocaleString?.() ?? ""}</td>
+          <td><button class="deleteBtn" data-id="${d.id}">Smazat</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Přidání listenerů na smazání
+      document.querySelectorAll(".deleteBtn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (confirm("Opravdu chceš smazat tuto žádost?")) {
+            await deleteDoc(doc(db, "zadosti", btn.dataset.id));
+            loadData();
+          }
+        });
+      });
+    }
+
+    // Login form
+    const loginForm = document.getElementById("loginForm");
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        alert("Chyba přihlášení: " + err.message);
+      }
+    });
+
+    // Auth state
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("adminBox").style.display = "block";
+        loadData();
+      } else {
+        document.getElementById("loginBox").style.display = "block";
+        document.getElementById("adminBox").style.display = "none";
+      }
+    });
+
+    window.logout = () => signOut(auth);
+  </script>
+</body>
+</html>
